@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Surprise For You</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for an elegant look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <!-- Icons for slider navigation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --slide-transform-prev: translateX(-50%) scale(0.85);
+            --slide-transform-next: translateX(50%) scale(0.85);
+            --slide-transform-active: translateX(0) scale(1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .font-handwriting {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6d1e3c, #4a1e50, #1e0c42);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 179, 186, 0.6);
+            animation: float-up 10s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes float-up {
+            0% { transform: translateY(0) translateX(0); opacity: 0.8; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* New 3D Stacked Slider Styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 450px; /* Adjust height for portrait images */
+            margin-bottom: 1.5rem;
+            perspective: 1000px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 70%; /* Active slide width */
+            max-width: 280px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            transition: transform 0.5s ease, opacity 0.5s ease, z-index 0.5s;
+            border-radius: 1.5rem; /* More rounded corners */
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            z-index: 1;
+            transform: scale(0.7);
+        }
+
+        .slide.active {
+            transform: var(--slide-transform-active);
+            opacity: 1;
+            z-index: 3;
+        }
+
+        .slide.prev {
+            transform: var(--slide-transform-prev);
+            opacity: 0.5;
+            z-index: 2;
+        }
+        
+        .slide.next {
+            transform: var(--slide-transform-next);
+            opacity: 0.5;
+            z-index: 2;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .moment-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2.5rem 1rem 1.5rem;
+            background: linear-gradient(to top, rgba(236, 72, 153, 0.8), transparent);
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .slider-nav:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        #prev-button { left: -10px; }
+        #next-button { right: -10px; }
+
+    </style>
+</head>
+<body class="gradient-bg text-white overflow-hidden min-h-screen flex items-center justify-center p-4">
+
+    <div id="main-container" class="w-full max-w-lg text-center">
+
+        <div id="initial-view">
+            <h1 class="font-handwriting text-6xl md:text-7xl text-yellow-300 mb-4 fade-in-up">For My Love</h1>
+            <p class="text-lg text-gray-300 mb-8 fade-in-up" style="animation-delay: 0.2s;">I made a little something for you...</p>
+            <button id="reveal-button" class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out fade-in-up" style="animation-delay: 0.4s;">
+                Click to see your surprise
+            </button>
+        </div>
+
+        <div id="surprise-content" class="hidden w-full">
+            
+            <h2 class="font-handwriting text-6xl text-pink-400 mb-6 fade-in-up" style="text-shadow: 0 0 15px rgba(236, 72, 153, 0.7);">I Love You Bithi</h2>
+
+            <!-- New 3D Stacked Slider -->
+            <div class="relative fade-in-up" style="animation-delay: 0.3s;">
+                <div id="slider" class="slider-container">
+                    <!-- 
+                        IMPORTANT: EDIT YOUR SLIDES HERE 
+                        Replace image URLs (use portrait photos) and the "moment" text.
+                    -->
+                    <div class="slide">
+                        <img src="23.jpg" alt="Memory 1">
+                        <div class="moment-caption">Our First Meet</div>
+                    </div>
+                    <div class="slide">
+                        <img src="22.jpg" alt="Memory 2">
+                        <div class="moment-caption">Second Meet</div>
+                    </div>
+                    <div class="slide">
+                        <img src="19.jpg" alt="Memory 3">
+                        <div class="moment-caption">My favorite moment</div>
+                    </div>
+                    <div class="slide">
+                        <img src="20.jpg" alt="Memory 4">
+                        <div class="moment-caption">Obbesed me her hair</div>
+                    </div>
+                     <div class="slide">
+                        <img src="21.jpg" alt="Memory 5">
+                        <div class="moment-caption">You have my whole heart</div>
+                    </div>
+                    <div class="slide">
+                        <img src="7.jpg" alt="Memory 5">
+                        <div class="moment-caption">Our College story</div>
+                    </div>
+                    <div class="slide">
+                        <img src="11.jpg" alt="Memory 5">
+                        <div class="moment-caption">My whole heart</div>
+                    </div>
+                    <div class="slide">
+                        <img src="12.jpg" alt="Memory 5">
+                        <div class="moment-caption">Weart</div>
+                    </div>
+                    <div class="slide">
+                        <img src="14.jpg" alt="Memory 5">
+                        <div class="moment-caption">My princess</div>
+                    </div>
+                    <div class="slide">
+                        <img src="16.jpg" alt="Memory 5">
+                        <div class="moment-caption">My queen</div>
+                    </div>
+                    <div class="slide">
+                        <img src="10.jpg" alt="Memory 5">
+                        <div class="moment-caption">Lalbagh Fort With us</div>
+                    </div>
+                    <div class="slide">
+                    <div class="slide">
+                        <img src="02.jpg" alt="Memory 5">
+                        <div class="moment-caption">Zinda Park</div>
+                    </div>
+                    <div class="slide">
+                        <img src="03.jpg" alt="Memory 5">
+                        <div class="moment-caption">Botanical Garden</div>
+                    </div>
+                    <div class="slide">
+                        <img src="05.jpg" alt="Memory 5">
+                        <div class="moment-caption">Lovely moment</div>
+                    </div>
+                    <div class="slide">
+                        <img src="06.jpg" alt="Memory 5">
+                        <div class="moment-caption">Lovely moment</div>
+                    </div>
+                    <div class="slide">
+                        <img src="07.jpg" alt="Memory 5">
+                        <div class="moment-caption">TSC</div>
+                    </div>
+                    <div class="slide">
+                        <img src="09.jpg" alt="Memory 5">
+                        <div class="moment-caption">Lovely moment</div>
+                    </div>
+                </div>
+                <!-- Navigation -->
+                <button id="prev-button" class="slider-nav"><i class="fas fa-chevron-left"></i></button>
+                <button id="next-button" class="slider-nav"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <!-- Heartfelt Message -->
+            <div class="bg-black bg-opacity-20 backdrop-blur-sm border border-white/10 p-6 rounded-lg shadow-2xl fade-in-up" style="animation-delay: 0.6s;">
+                <h2 class="font-handwriting text-5xl text-yellow-300 mb-3">My Dearest,</h2>
+                <p class="text-gray-300 leading-relaxed">
+                    Every moment with you feels like a beautiful dream. This is just a small way to show you how much you mean to me. Thank you for being you.
+                </p>
+                <p class="font-bold text-pink-400 mt-4">Forever and always,</p>
+                <p class="font-handwriting text-4xl mt-2 text-yellow-300">Mahbub</p>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const revealButton = document.getElementById('reveal-button');
+            const initialView = document.getElementById('initial-view');
+            const surpriseContent = document.getElementById('surprise-content');
+            const body = document.querySelector('body');
+
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '&#10084;';
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                body.appendChild(heart);
+                setTimeout(() => heart.remove(), 10000);
+            }
+
+            // --- New 3D Slider Logic ---
+            const slides = document.querySelectorAll('.slide');
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+            let currentIndex = 0;
+
+            function updateSlider(newIndex) {
+                currentIndex = (newIndex + slides.length) % slides.length;
+
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'prev', 'next');
+                    
+                    if (index === currentIndex) {
+                        slide.classList.add('active');
+                    } else if (index === (currentIndex - 1 + slides.length) % slides.length) {
+                        slide.classList.add('prev');
+                    } else if (index === (currentIndex + 1) % slides.length) {
+                        slide.classList.add('next');
+                    }
+                });
+            }
+            
+            prevButton.addEventListener('click', () => updateSlider(currentIndex - 1));
+            nextButton.addEventListener('click', () => updateSlider(currentIndex + 1));
+
+            // --- Main Reveal Logic ---
+            revealButton.addEventListener('click', () => {
+                initialView.style.transition = 'opacity 0.5s ease-out';
+                initialView.style.opacity = '0';
+
+                setTimeout(() => {
+                    initialView.classList.add('hidden');
+                    surpriseContent.classList.remove('hidden');
+                    
+                    updateSlider(0); // Initialize slider
+                    setInterval(createHeart, 500);
+                }, 500);
+            });
+        });
+    </script>
+
+</body>
+</html>
